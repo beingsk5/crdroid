@@ -1,0 +1,52 @@
+name: Import Kernel Repo Until Specific Commit
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout your repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "beingsk"
+          git config --global user.email "actions@github.com"
+
+
+      - name: Clone FULL source repo
+        run: |
+          git clone https://github.com/crdroidandroid/android_kernel_oneplus_sm8150.git source
+          cd source
+
+
+      - name: Create branch from specific commit
+        run: |
+          cd source
+          git checkout -b 16.0 e3558992e2a9334924354c88728698247175f289
+
+
+      - name: Remove workflow repo old files
+        run: |
+          rm -rf *
+          rm -rf .git
+
+
+      - name: Copy full repo including .git history
+        run: |
+          cp -r source/. .
+          
+
+      - name: Push branch 16.0 to your repo
+        run: |
+          git push origin 16.0 --force
