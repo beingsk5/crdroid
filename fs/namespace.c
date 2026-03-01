@@ -117,7 +117,7 @@ retry:
 	return res;
 }
 
-static void mnt_free_id(struct mount *mnt)
+static __maybe_unused int mnt_alloc_id(struct mount *mnt)
 {
 	int id = mnt->mnt_id;
 	spin_lock(&mnt_id_lock);
