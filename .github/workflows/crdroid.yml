@@ -1,4 +1,4 @@
-name: Import Kernel Repo Until Specific Commit
+name: Import crDroid Kernel at Specific Commit
 
 on:
   workflow_dispatch:
@@ -12,41 +12,20 @@ jobs:
 
     steps:
 
-      - name: Checkout your repo
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-
-      - name: Configure Git
-        run: |
-          git config --global user.name "beingsk"
-          git config --global user.email "actions@github.com"
-
-
-      - name: Clone FULL source repo
+      - name: Clone source repo FULL
         run: |
           git clone https://github.com/crdroidandroid/android_kernel_oneplus_sm8150.git source
           cd source
 
-
-      - name: Create branch from specific commit
+      - name: Push specific commit to YOUR repo branch 16.0
         run: |
           cd source
-          git checkout -b 16.0 e3558992e2a9334924354c88728698247175f289
 
+          git config user.name "beingsk"
+          git config user.email "actions@github.com"
 
-      - name: Remove workflow repo old files
-        run: |
-          rm -rf *
-          rm -rf .git
+          # Add your repo as remote
+          git remote add target https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/beingsk5/crdroid.git
 
-
-      - name: Copy full repo including .git history
-        run: |
-          cp -r source/. .
-          
-
-      - name: Push branch 16.0 to your repo
-        run: |
-          git push origin 16.0 --force
+          # Push specific commit as branch 16.0
+          git push target e3558992e2a9334924354c88728698247175f289:refs/heads/16.0 --force
