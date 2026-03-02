@@ -945,8 +945,7 @@ struct task_struct {
 	struct list_head		ptrace_entry;
 
 	/* PID/PID hash table linkage. */
-	struct pid			*thread_pid;
-	struct hlist_node		pid_links[PIDTYPE_MAX];
+	struct pid_link       pids[PIDTYPE_MAX];
 	struct list_head		thread_group;
 	struct list_head		thread_node;
 
