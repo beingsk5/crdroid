@@ -1,0 +1,63 @@
+name: Create 16.2 with Extra Patches
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # Clone YOUR repo
+      - name: Clone your repo
+        run: |
+          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/beingsk5/crdroid.git
+          cd crdroid
+          git checkout 16.0
+
+
+      # Create new branch 16.2
+      - name: Create branch 16.2
+        run: |
+          cd crdroid
+          git checkout -b 16.2
+
+
+      # Add upstream repo
+      - name: Add upstream
+        run: |
+          cd crdroid
+          git remote add upstream https://github.com/crdroidandroid/android_kernel_oneplus_sm8150.git
+          git fetch upstream
+
+
+      # Cherry-pick commits
+      - name: Apply patches
+        run: |
+          cd crdroid
+
+          git config user.name "beingsk"
+          git config user.email "actions@github.com"
+
+          git cherry-pick 404a48bb906626e0bfe4dac4577709ccf24155d5
+          git cherry-pick 1e00891b4258cb011e79d255178f6db81446c3cc
+          git cherry-pick ce9ee70e5c8a50bab490667176671caea324628a
+          git cherry-pick 938ba1ae715e2f03ed1302796e639fbb8365881d
+          git cherry-pick b319c9d678f81e9fb1109f2207925d728411cdcc
+          git cherry-pick 77a23d3f3e0d37350bc0d9ad9778f6d0577a36ce
+          git cherry-pick 71ffe2c699140054c51619e3673fc3ae33a81c90
+          git cherry-pick 61b53ed82db3803f44a902463a2a695d9aafa17e
+          git cherry-pick 3c63d7a99430cd4aed868df1ca9f978c39d99d61
+          git cherry-pick 09048eb13ca769839ae92c8ff2f7a619712655c6
+          git cherry-pick fec0976e51c9460c65602f5d496433f8d449e655
+
+
+      # Push branch
+      - name: Push 16.2
+        run: |
+          cd crdroid
+          git push origin 16.2 --force
