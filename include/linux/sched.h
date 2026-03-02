@@ -945,12 +945,6 @@ struct task_struct {
 	struct list_head		ptrace_entry;
 
 	/* PID/PID hash table linkage. */
-
-    struct pid_link {
-    struct hlist_node node;
-    struct pid *pid;
-    };
-
     struct pid *thread_pid;
 
     /* KernelSU compatibility */
