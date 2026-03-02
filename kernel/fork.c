@@ -2133,31 +2133,6 @@ static __latent_entropy struct task_struct *copy_process(
         INIT_HLIST_NODE(&p->pids[PIDTYPE_PGID].node);
         INIT_HLIST_NODE(&p->pids[PIDTYPE_SID].node);
 
-		/* REQUIRED: link nodes so KernelSU can enumerate */
-
-       if (p->thread_pid)
-	       hlist_add_head(
-		       &p->pids[PIDTYPE_PID].node,
-		       &p->thread_pid->tasks[PIDTYPE_PID]
-	       );
-
-      if (p->signal->pids[PIDTYPE_TGID])
-	      hlist_add_head(
-		      &p->pids[PIDTYPE_TGID].node,
-		      &p->signal->pids[PIDTYPE_TGID]->tasks[PIDTYPE_TGID]
-	      );
-
-      if (p->signal->pids[PIDTYPE_PGID])
-	      hlist_add_head(
-		      &p->pids[PIDTYPE_PGID].node,
-		      &p->signal->pids[PIDTYPE_PGID]->tasks[PIDTYPE_PGID]
-	      );
-
-      if (p->signal->pids[PIDTYPE_SID])
-	      hlist_add_head(
-		      &p->pids[PIDTYPE_SID].node,
-		      &p->signal->pids[PIDTYPE_SID]->tasks[PIDTYPE_SID]
-	      );
 	}
 
 	total_forks++;
@@ -2251,10 +2226,6 @@ static inline void init_idle_pids(struct task_struct *idle)
 			: idle->signal->pids[type];
 
 		INIT_HLIST_NODE(&idle->pids[type].node);
-
-		if (idle->pids[type].pid)
-	        hlist_add_head(&idle->pids[type].node,
-		               &idle->pids[type].pid->tasks[type]);
 	}
 }
 
