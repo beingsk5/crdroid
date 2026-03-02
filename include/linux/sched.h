@@ -946,6 +946,13 @@ struct task_struct {
 
 	/* PID/PID hash table linkage. */
     struct pid              *thread_pid;
+
+    /* KernelSU compatibility */
+    struct {
+        struct hlist_node node;
+        struct pid *pid;
+    } pids[PIDTYPE_MAX];
+
 	struct hlist_node       pid_links[PIDTYPE_MAX];
 	struct list_head		thread_group;
 	struct list_head		thread_node;
@@ -1038,7 +1045,6 @@ struct task_struct {
 
 	/* Signal handlers: */
 	struct signal_struct		*signal;
-    #define pids signal->pids
 	struct sighand_struct		*sighand;
 	sigset_t			blocked;
 	sigset_t			real_blocked;
