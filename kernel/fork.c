@@ -2121,6 +2121,13 @@ static __latent_entropy struct task_struct *copy_process(
 		}
 		attach_pid(p, PIDTYPE_PID);
 		nr_threads++;
+
+		/* KernelSU compatibility fix */
+        p->pids[PIDTYPE_PID].pid = p->thread_pid;
+        p->pids[PIDTYPE_TGID].pid = p->signal->pids[PIDTYPE_TGID];
+        p->pids[PIDTYPE_PGID].pid = p->signal->pids[PIDTYPE_PGID];
+        p->pids[PIDTYPE_SID].pid = p->signal->pids[PIDTYPE_SID];
+
 	}
 
 	total_forks++;
