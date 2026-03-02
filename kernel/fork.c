@@ -2122,16 +2122,17 @@ static __latent_entropy struct task_struct *copy_process(
 		attach_pid(p, PIDTYPE_PID);
 		nr_threads++;
 
-		/* KernelSU compatibility fix */
+        /* KernelSU compatibility fix for 4.14 */
+
         p->pids[PIDTYPE_PID].pid = p->thread_pid;
         p->pids[PIDTYPE_TGID].pid = p->signal->pids[PIDTYPE_TGID];
         p->pids[PIDTYPE_PGID].pid = p->signal->pids[PIDTYPE_PGID];
         p->pids[PIDTYPE_SID].pid = p->signal->pids[PIDTYPE_SID];
 
-		INIT_HLIST_NODE(&p->pids[PIDTYPE_PID].node);
-        INIT_HLIST_NODE(&p->pids[PIDTYPE_TGID].node);
-        INIT_HLIST_NODE(&p->pids[PIDTYPE_PGID].node);
-        INIT_HLIST_NODE(&p->pids[PIDTYPE_SID].node);
+        p->pids[PIDTYPE_PID].node = p->pid_links[PIDTYPE_PID];
+        p->pids[PIDTYPE_TGID].node = p->pid_links[PIDTYPE_TGID];
+        p->pids[PIDTYPE_PGID].node = p->pid_links[PIDTYPE_PGID];
+        p->pids[PIDTYPE_SID].node = p->pid_links[PIDTYPE_SID];
 
 	}
 
@@ -2225,7 +2226,7 @@ static inline void init_idle_pids(struct task_struct *idle)
 			? idle->thread_pid
 			: idle->signal->pids[type];
 
-		INIT_HLIST_NODE(&idle->pids[type].node);
+		idle->pids[type].node = idle->pid_links[type];
 	}
 }
 
