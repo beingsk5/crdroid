@@ -523,6 +523,9 @@ ifneq ($(KBUILD_SRC),)
 endif
 
 ifeq ($(cc-name),clang)
+KBUILD_CFLAGS += -Wno-error
+KBUILD_CFLAGS += -Wno-ignored-optimization-argument
+KBUILD_CPPFLAGS += -Wno-error
 ifneq ($(CROSS_COMPILE),)
 CLANG_TRIPLE	?= $(CROSS_COMPILE)
 CLANG_FLAGS	+= --target=$(notdir $(CLANG_TRIPLE:%-=%))
@@ -753,7 +756,7 @@ endif
 endif
 
 ifdef CONFIG_CC_WERROR
-KBUILD_CFLAGS  += -Werror
+KBUILD_CFLAGS += -Wno-error
 endif
 
 # Tell gcc to never replace conditional load with a non-conditional one
@@ -1017,9 +1020,9 @@ KBUILD_CFLAGS	+= $(call cc-option,-fno-strict-overflow)
 # need to disable it here generally.
 KBUILD_CFLAGS	+= $(call cc-option,-fno-merge-all-constants)
 
-# for gcc -fno-merge-all-constants disables everything, but it is fine
-# to have actual conforming behavior enabled.
-KBUILD_CFLAGS	+= $(call cc-option,-fmerge-constants)
+ifeq ($(cc-name),gcc)
+KBUILD_CFLAGS += $(call cc-option,-fmerge-constants)
+endif
 
 # Make sure -fstack-check isn't enabled (like gentoo apparently did)
 KBUILD_CFLAGS  += $(call cc-option,-fno-stack-check,)
