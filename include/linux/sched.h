@@ -945,15 +945,20 @@ struct task_struct {
 	struct list_head		ptrace_entry;
 
 	/* PID/PID hash table linkage. */
-    struct pid              *thread_pid;
+
+    struct pid_link {
+    struct hlist_node node;
+    struct pid *pid;
+    };
+
+    struct pid *thread_pid;
 
     /* KernelSU compatibility */
-    struct {
-        struct hlist_node node;
-        struct pid *pid;
-    } pids[PIDTYPE_MAX];
+    struct pid_link pids[PIDTYPE_MAX];
 
-	struct hlist_node       pid_links[PIDTYPE_MAX];
+    /* original kernel linkage */
+    struct hlist_node pid_links[PIDTYPE_MAX];
+
 	struct list_head		thread_group;
 	struct list_head		thread_node;
 
