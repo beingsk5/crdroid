@@ -2009,4 +2009,12 @@ static inline void set_wake_up_idle(bool enabled)
 		current->flags &= ~PF_WAKE_UP_IDLE;
 }
 
+/* KernelSU KPM compatibility */
+
+#include <linux/version.h>
+
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4,19,0)
+#define pids pid_links
+#endif
+
 #endif
